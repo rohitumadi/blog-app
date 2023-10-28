@@ -1,14 +1,19 @@
 package com.rohit.blogappapis.controllers;
 
+import com.rohit.blogappapis.config.AppConstants;
 import com.rohit.blogappapis.payloads.ApiResponse;
 import com.rohit.blogappapis.payloads.PostDto;
 import com.rohit.blogappapis.payloads.PostResponse;
+import com.rohit.blogappapis.services.FileService;
 import com.rohit.blogappapis.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,6 +22,12 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${project.image}")
+    private String path;
 
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto,
@@ -28,8 +39,8 @@ public class PostController {
     }
 
     @GetMapping("/category/{categoryId}/posts")
-    public  ResponseEntity<PostResponse> getPostsByCategory(@RequestParam(value = "pageNumber", defaultValue ="1",required = false) Integer pageNumber,
-                                                            @RequestParam(value = "pageSize", defaultValue ="5",required = false) Integer pageSize,@PathVariable Integer categoryId)
+    public  ResponseEntity<PostResponse> getPostsByCategory(@RequestParam(value = "pageNumber", defaultValue =AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+                                                            @RequestParam(value = "pageSize", defaultValue =AppConstants.PAGE_SIZE,required = false) Integer pageSize,@PathVariable Integer categoryId)
     {
         PostResponse posts=this
                 .postService
@@ -38,17 +49,17 @@ public class PostController {
 
     }
     @GetMapping("/user/{userId}/posts")
-    public ResponseEntity<PostResponse> getPostsByUser(@RequestParam(value = "pageNumber", defaultValue ="1",required = false) Integer pageNumber,
-                                                        @RequestParam(value = "pageSize", defaultValue ="5",required = false) Integer pageSize,@PathVariable Integer userId)
+    public ResponseEntity<PostResponse> getPostsByUser(@RequestParam(value = "pageNumber", defaultValue =AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+                                                        @RequestParam(value = "pageSize", defaultValue =AppConstants.PAGE_SIZE,required = false) Integer pageSize,@PathVariable Integer userId)
     {
         PostResponse posts=this.postService.getPostsByUser(pageNumber, pageSize,userId);
         return new ResponseEntity<PostResponse>(posts,HttpStatus.OK);
     }
     @GetMapping("/posts")
-    public ResponseEntity<PostResponse> getAllPosts(@RequestParam(value = "pageNumber", defaultValue ="1",required = false) Integer pageNumber,
-                                                    @RequestParam(value = "pageSize", defaultValue ="5",required = false) Integer pageSize,
-                                                    @RequestParam(value = "sortBy", defaultValue ="postId",required = false) String sortBy,
-                                                    @RequestParam(value = "sortDir", defaultValue ="asc",required = false) String sortDir
+    public ResponseEntity<PostResponse> getAllPosts(@RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+                                                    @RequestParam(value = "pageSize", defaultValue =AppConstants.PAGE_SIZE,required = false) Integer pageSize,
+                                                    @RequestParam(value = "sortBy", defaultValue =AppConstants.SORT_BY,required = false) String sortBy,
+                                                    @RequestParam(value = "sortDir", defaultValue =AppConstants.SORT_DIR,required = false) String sortDir
     )//pagenumber starts from 0
     {
         PostResponse  posts=this.postService.getAllPosts(pageNumber, pageSize,sortBy,sortDir);
@@ -83,6 +94,19 @@ public class PostController {
         List<PostDto> postDtos=this.postService.searchPosts(keywords);
         return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
     }
+
+    @PostMapping("/post/image/upload/{postId}")
+    public ResponseEntity<PostDto> uploadPostImage(@PathVariable Integer postId,
+            @RequestParam MultipartFile image) throws IOException {
+        PostDto postDto=this.postService.getPostById(postId);
+        String fileName=this.fileService.uploadImage(path,image);
+        postDto.setImageName(fileName);
+        PostDto updatedPost=this.postService.updatePost(postDto,postId);
+        return new ResponseEntity<PostDto>(updatedPost,HttpStatus.OK);
+
+    }
+
+
 
 
 }
