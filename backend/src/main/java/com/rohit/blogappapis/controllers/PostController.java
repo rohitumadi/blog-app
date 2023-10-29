@@ -74,6 +74,7 @@ public class PostController {
     public ResponseEntity<PostDto> getPostById(@PathVariable Integer postId)
     {
         PostDto postDto=this.postService.getPostById(postId);
+
         return new ResponseEntity<PostDto>(postDto,HttpStatus.OK);
     }
 

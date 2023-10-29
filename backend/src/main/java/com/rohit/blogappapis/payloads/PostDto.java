@@ -21,6 +21,7 @@ public class PostDto {
 
     private CategoryDto category;
     private UserDto user;
+//    private Set<CommentDto> commentSet=new HashSet<>();
 
 
 }
