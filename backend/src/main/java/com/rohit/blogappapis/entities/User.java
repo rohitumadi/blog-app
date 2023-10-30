@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private String password;
     private String about;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch =FetchType.EAGER)
     private Set<Post> posts=new HashSet<>();
 
 //    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
