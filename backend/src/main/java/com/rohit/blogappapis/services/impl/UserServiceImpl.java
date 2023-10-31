@@ -1,12 +1,16 @@
 package com.rohit.blogappapis.services.impl;
 
+import com.rohit.blogappapis.config.AppConstants;
+import com.rohit.blogappapis.entities.Role;
 import com.rohit.blogappapis.entities.User;
 import com.rohit.blogappapis.exceptions.ResourceNotFoundException;
 import com.rohit.blogappapis.payloads.UserDto;
+import com.rohit.blogappapis.repositories.RoleRepository;
 import com.rohit.blogappapis.repositories.UserRepository;
 import com.rohit.blogappapis.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +22,28 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDto registerNewUser(UserDto userDto) {
+        User user=this.dtoToUser(userDto);
+//        encode plainText of user password
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        //roles
+        Role role=this.roleRepository.findById(AppConstants.NORMAL_USER).get();
+        user.getRoles().add(role);
+        User newUser=this.userRepository.save(user);
+
+        return this.userToDto(newUser);
+
+    }
+
     @Override
     public UserDto createUser(UserDto userDto) {
         User user=this.dtoToUser(userDto);
