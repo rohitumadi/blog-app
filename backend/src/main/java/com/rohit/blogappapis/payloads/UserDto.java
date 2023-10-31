@@ -24,6 +24,11 @@ public class UserDto {
     @NotEmpty
     //@JsonIgnore                 //To Hide Password, but it Will ignore for both GET(Marshalling) and POST(UnMarshalling)
 //    private String password;
+    //another way to handle password is ignore password in getter method
+    //@JsonIgnore
+    //public String getPassword(){return this.password;}
+
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)        //To hide password only for Marshalling
     @Size(min = 4,message = "Password must be greater than 4 characters")
     private String password;

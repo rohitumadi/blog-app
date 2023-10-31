@@ -1,6 +1,7 @@
 package com.rohit.blogappapis.controllers;
 
 
+import com.rohit.blogappapis.entities.User;
 import com.rohit.blogappapis.exceptions.ApiException;
 import com.rohit.blogappapis.payloads.JwtAuthRequest;
 import com.rohit.blogappapis.payloads.JwtAuthResponse;
@@ -8,6 +9,7 @@ import com.rohit.blogappapis.payloads.UserDto;
 import com.rohit.blogappapis.security.JwtTokenHelper;
 import com.rohit.blogappapis.services.UserService;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,14 +37,19 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private ModelMapper mapper;
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest request) throws Exception {
-        System.out.println("in login controller");
+
         this.authenticate(request.getUsername(),request.getPassword());
         UserDetails user=this.userDetailsService.loadUserByUsername(request.getUsername());
         String token =this.jwtTokenHelper.generateToken(user);
+
         JwtAuthResponse response=new JwtAuthResponse();
         response.setToken(token);
+        response.setUserDto(this.mapper.map((User) user ,UserDto.class));
         System.out.println("token: " + token);
         return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
     }

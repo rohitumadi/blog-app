@@ -43,22 +43,6 @@ function Signup() {
   function handleSubmitForm(e) {
     e.preventDefault();
 
-    //data validation
-    // if (error.isError) {
-    //   toast.error("Form data is invalid!", {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "light",
-    //   });
-    //   setError({ ...error, isError: false });
-
-    //   return;
-    // }
     //call server api for sending the data
     signUp(data)
       .then((res) => {
