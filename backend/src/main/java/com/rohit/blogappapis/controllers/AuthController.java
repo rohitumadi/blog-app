@@ -7,6 +7,7 @@ import com.rohit.blogappapis.payloads.JwtAuthResponse;
 import com.rohit.blogappapis.payloads.UserDto;
 import com.rohit.blogappapis.security.JwtTokenHelper;
 import com.rohit.blogappapis.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +62,7 @@ public class AuthController {
 
     //register new user
     @PostMapping("/signup")
-    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto)
+    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto userDto)
     {
         UserDto newUser=this.userService.registerNewUser(userDto);
         return new ResponseEntity<UserDto>(newUser,HttpStatus.CREATED);

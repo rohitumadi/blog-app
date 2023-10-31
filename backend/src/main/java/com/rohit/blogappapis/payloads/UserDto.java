@@ -18,6 +18,7 @@ public class UserDto {
     @NotEmpty
     @Size(min = 4,message = "Username must be greater than 4 characters")
     private String name;
+    @NotEmpty
     @Email(message = "Email is not valid")
     private String email;
     @NotEmpty
