@@ -19,6 +19,6 @@ export function doLogout(next) {
 //get Current User
 export function getCurrentUser() {
   if (isLoggedIn()) {
-    return JSON.parse(localStorage.getItem("data").userDto);
-  } else return false;
+    return JSON.parse(localStorage.getItem("data")).userDto;
+  } else return undefined;
 }
