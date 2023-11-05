@@ -16,6 +16,7 @@ import Base from "../components/Base";
 import { useState } from "react";
 import { signUp } from "../services/userService";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [data, setData] = useState({
@@ -24,6 +25,7 @@ function Signup() {
     password: "",
     about: "",
   });
+  const navigate = useNavigate();
   const [error, setError] = useState({
     errors: {},
     isError: false,
@@ -38,7 +40,7 @@ function Signup() {
       password: "",
       about: "",
     });
-    setError({ ...error, isError: false });
+    setError({ errors: {}, isError: false });
   }
   function handleSubmitForm(e) {
     e.preventDefault();
@@ -57,7 +59,7 @@ function Signup() {
           progress: undefined,
           theme: "light",
         });
-
+        navigate("/login");
         resetData();
       })
       .catch((err) => {

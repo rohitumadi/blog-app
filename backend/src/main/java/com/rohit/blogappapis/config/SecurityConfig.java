@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -32,6 +33,11 @@ public class SecurityConfig  {
         private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
         @Autowired
         private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public static final String[] PUBLIC_URLS = {"/api/v1/auth/**", "/v3/api-docs", "/v2/api-docs",
+            "/swagger-resources/**", "/swagger-ui/**", "/webjars/**"
+
+    };
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             System.out.println("init security filter");
@@ -39,9 +45,10 @@ public class SecurityConfig  {
                 .csrf((csrf) ->csrf.disable())
                     .cors(cors->cors.disable())
                 .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("api/v1/auth/**")
+                .requestMatchers(PUBLIC_URLS)
                 .permitAll()
-
+                .requestMatchers(HttpMethod.GET)
+                .permitAll()
                 .anyRequest().authenticated()
                 )
                 .exceptionHandling((exceptionHandling) ->

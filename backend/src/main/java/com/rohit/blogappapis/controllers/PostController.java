@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/v1/")
 public class PostController {
 
     @Autowired
