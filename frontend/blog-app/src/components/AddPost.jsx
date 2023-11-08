@@ -12,17 +12,18 @@ import {
 import { loadCategories } from "../services/categoryService";
 import React, { useRef } from "react";
 import JoditEditor from "jodit-react";
+import { toast } from "react-toastify";
+import { createPost as submitPost } from "../services/postService";
 
 function AddPost() {
   const editor = useRef(null);
-  const [content, setContent] = useState("");
-
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-    placeholder: "Start typing...",
-  };
-
   const [categories, setCategories] = useState([]);
+  const [post, setPost] = useState({
+    title: "",
+    content: "",
+    categoryId: "",
+  });
+
   useEffect(function () {
     async function fetchCategories() {
       try {
@@ -35,15 +36,49 @@ function AddPost() {
     }
     fetchCategories();
   }, []);
+
+  function fieldChanged(e) {
+    setPost({ ...post, [e.target.name]: e.target.value });
+  }
+  function contentFieldChanged(data) {
+    setPost({ ...post, content: data });
+  }
+  function createPost(e) {
+    e.preventDefault();
+    if (post.title === "") {
+      toast.error("Post title cannot be empty");
+      return;
+    }
+    if (post.content === "") {
+      toast.error("Post content cannot be empty");
+      return;
+    }
+    if (post.categoryId === "") {
+      toast.error("Please select a category");
+      return;
+    }
+    submitPost(post)
+      .then((res) => {
+        toast.success("Post created successfully");
+        console.log(post);
+      })
+      .catch((err) => {
+        toast.error("Something went wrong please try again!");
+      });
+  }
   return (
     <div
       className=" d-flex align-items-center justify-content-center"
       style={{ height: "90vh" }}
     >
-      <Card className="shadow" style={{ width: "60%", height: "90%" }}>
+      <Card
+        className="shadow"
+        style={{ width: "60%", height: "90%", overflow: "auto" }}
+      >
         <CardBody>
+          {JSON.stringify(post)}
           <h3> What's on your mind today</h3>
-          <Form>
+          <Form onSubmit={createPost}>
             <FormGroup>
               <Label for="title">Title</Label>
               <Input
@@ -51,6 +86,7 @@ function AddPost() {
                 name="title"
                 placeholder="Web Development"
                 type="text"
+                onChange={fieldChanged}
               />
             </FormGroup>
             <FormGroup>
@@ -64,17 +100,24 @@ function AddPost() {
               /> */}
               <JoditEditor
                 ref={editor}
-                value={content}
-                config={config}
+                value={post.content}
                 tabIndex={1} // tabIndex of textarea
-                onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-                onChange={(newContent) => {}}
+                onChange={contentFieldChanged}
               />
             </FormGroup>
 
             <FormGroup>
               <Label for="category">Post Category</Label>
-              <Input id="category" name="select" type="select">
+              <Input
+                id="category"
+                name="categoryId"
+                type="select"
+                onChange={fieldChanged}
+                defaultValue={0}
+              >
+                <option disabled value={0}>
+                  Select category
+                </option>
                 {/* load dynamic categories */}
                 {categories.map((category) => {
                   return (
@@ -89,7 +132,9 @@ function AddPost() {
               </Input>
             </FormGroup>
             <Container className="text-center mt-4">
-              <Button color="success">Create Post</Button>
+              <Button type="submit" color="success">
+                Create Post
+              </Button>
               <Button color="success" className="ms-2">
                 Reset Content
               </Button>
