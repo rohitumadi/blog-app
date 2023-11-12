@@ -1,7 +1,7 @@
-import { myAxios } from "./helper";
+import { privateAxios } from "./helper";
 
 export function createPost(postData) {
-  return myAxios
+  return privateAxios
     .post(
       `/user/${postData.userId}/category/${postData.categoryId}/posts`,
       postData

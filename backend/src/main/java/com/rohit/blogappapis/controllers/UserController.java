@@ -18,7 +18,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto)
     {
         UserDto createdUserDto=this.userService.createUser(userDto);
@@ -40,7 +40,7 @@ public class UserController {
         return new ResponseEntity<ApiResponse>(new ApiResponse("User Deleted",true),HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers()
     {
         List<UserDto> userDtoList=this.userService.getAllUser();

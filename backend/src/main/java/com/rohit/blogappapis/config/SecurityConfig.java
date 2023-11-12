@@ -103,6 +103,11 @@ public class SecurityConfig  {
         source.registerCorsConfiguration("/**", corsConfiguration);
 
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+//        when request is triggered it firstly goes to the spring cors filter
+//        by default and not reaching our filter,
+//        which is rejecting request, and it's never triggering my cors filter.
+//        so you have to set order of triggering, something like that:
+
         bean.setOrder(-110);
         return bean;
 

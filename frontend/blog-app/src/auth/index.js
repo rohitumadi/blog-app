@@ -22,3 +22,9 @@ export function getCurrentUser() {
     return JSON.parse(localStorage.getItem("data")).userDto;
   } else return undefined;
 }
+
+export function getToken() {
+  if (isLoggedIn()) {
+    return JSON.parse(localStorage.getItem("data")).token;
+  } else return undefined;
+}

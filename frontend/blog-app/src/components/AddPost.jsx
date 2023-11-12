@@ -14,10 +14,12 @@ import React, { useRef } from "react";
 import JoditEditor from "jodit-react";
 import { toast } from "react-toastify";
 import { createPost as submitPost } from "../services/postService";
+import { getCurrentUser } from "../auth";
 
 function AddPost() {
   const editor = useRef(null);
   const [categories, setCategories] = useState([]);
+  const [user, setUser] = useState(undefined);
   const [post, setPost] = useState({
     title: "",
     content: "",
@@ -27,9 +29,9 @@ function AddPost() {
   useEffect(function () {
     async function fetchCategories() {
       try {
+        setUser(getCurrentUser());
         const res = await loadCategories();
         setCategories(res);
-        console.log(res);
       } catch (err) {
         console.log(err);
       }
@@ -57,12 +59,15 @@ function AddPost() {
       toast.error("Please select a category");
       return;
     }
+    post["userId"] = user.id;
     submitPost(post)
       .then((res) => {
+        console.log("user", user);
         toast.success("Post created successfully");
         console.log(post);
       })
       .catch((err) => {
+        console.log(err);
         toast.error("Something went wrong please try again!");
       });
   }
@@ -76,7 +81,6 @@ function AddPost() {
         style={{ width: "60%", height: "90%", overflow: "auto" }}
       >
         <CardBody>
-          {JSON.stringify(post)}
           <h3> What's on your mind today</h3>
           <Form onSubmit={createPost}>
             <FormGroup>
