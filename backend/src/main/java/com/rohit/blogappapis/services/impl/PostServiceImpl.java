@@ -1,12 +1,15 @@
 package com.rohit.blogappapis.services.impl;
 
 import com.rohit.blogappapis.entities.Category;
+import com.rohit.blogappapis.entities.Comment;
 import com.rohit.blogappapis.entities.Post;
 import com.rohit.blogappapis.entities.User;
 import com.rohit.blogappapis.exceptions.ResourceNotFoundException;
+import com.rohit.blogappapis.payloads.CommentDto;
 import com.rohit.blogappapis.payloads.PostDto;
 import com.rohit.blogappapis.payloads.PostResponse;
 import com.rohit.blogappapis.repositories.CategoryRepository;
+import com.rohit.blogappapis.repositories.CommentRepository;
 import com.rohit.blogappapis.repositories.PostRepository;
 import com.rohit.blogappapis.repositories.UserRepository;
 import com.rohit.blogappapis.services.PostService;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -27,6 +31,8 @@ public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private CommentRepository commentRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -93,7 +99,11 @@ public class PostServiceImpl implements PostService {
         List<Post> allPost = pagePost.getContent();
         List<PostDto> postDtoList = allPost
                 .stream()
-                .map((post) -> this.postToDto(post)).toList();
+                .map((post) ->{
+                    Set<Comment> comments=this.commentRepository.findByPostId(post.getPostId());
+                    post.setComments(comments);
+                    return this.postToDto(post);
+                }).toList();
         PostResponse postResponse=new PostResponse();
         postResponse.setContent(postDtoList);
         postResponse.setPageNumber(pagePost.getNumber());
@@ -177,5 +187,17 @@ public class PostServiceImpl implements PostService {
     {
         PostDto postDto =this.modelMapper.map(post,PostDto.class);
         return postDto;
+    }
+
+    public Comment dtoToComment(CommentDto commentDto)
+    {
+        Comment comment=this.modelMapper.map(commentDto, Comment.class);
+        return comment;
+
+    }
+    public CommentDto commentToDto(Comment comment)
+    {
+        CommentDto commentDto =this.modelMapper.map(comment,CommentDto.class);
+        return commentDto;
     }
 }

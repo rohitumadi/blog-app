@@ -11,6 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -36,6 +39,12 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = this.commentRepository.findById(commentId).orElseThrow(()->new ResourceNotFoundException("Comment","commentId",commentId));
         this.commentRepository.delete(comment);
 
+    }
+
+    public Set<CommentDto> getCommentByPostId(Integer postId) {
+        Set<Comment> comments = this.commentRepository.findByPostId(postId);
+        Set<CommentDto> commentDtos=comments.stream().map(comment -> this.commentToDto(comment)).collect(Collectors.toSet());
+        return commentDtos;
     }
 
     public Comment dtoToComment(CommentDto commentDto)
