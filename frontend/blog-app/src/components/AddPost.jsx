@@ -62,12 +62,14 @@ function AddPost() {
     post["userId"] = user.id;
     submitPost(post)
       .then((res) => {
-        console.log("user", user);
         toast.success("Post created successfully");
-        console.log(post);
+        setPost({
+          title: "",
+          content: "",
+          categoryId: "",
+        });
       })
       .catch((err) => {
-        console.log(err);
         toast.error("Something went wrong please try again!");
       });
   }

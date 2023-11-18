@@ -20,7 +20,7 @@ public class Post {
 
     @Column(name = "post_title",nullable = false,length = 30)
     private String title;
-
+    @Column(name="content",columnDefinition = "TEXT")
     private String content;
 
     private String imageName;

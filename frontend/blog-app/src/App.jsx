@@ -14,20 +14,14 @@ import UserDashboard from "./pages/user-routes/UserDashboard";
 import Privateroute from "./components/Privateroute";
 import ProfileInfo from "./pages/user-routes/UserInfo";
 import UserInfo from "./pages/user-routes/UserInfo";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Base>
-                <h1>This is app component</h1>
-              </Base>
-            }
-          />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />

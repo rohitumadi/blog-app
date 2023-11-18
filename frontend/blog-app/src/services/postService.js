@@ -1,4 +1,4 @@
-import { privateAxios } from "./helper";
+import { myAxios, privateAxios } from "./helper";
 
 export function createPost(postData) {
   return privateAxios
@@ -7,4 +7,9 @@ export function createPost(postData) {
       postData
     )
     .then((res) => res.data);
+}
+
+//get all posts
+export function getAllPosts() {
+  return myAxios.get(`/posts`).then((res) => res.data);
 }
