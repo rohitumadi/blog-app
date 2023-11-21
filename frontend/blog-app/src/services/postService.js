@@ -13,7 +13,7 @@ export function createPost(postData) {
 export function getAllPosts(pageNumber = 0, pageSize = 5) {
   return myAxios
     .get(
-      `/posts?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=dateCreated&sortDir=asc`
+      `/posts?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=dateCreated&sortDir=desc`
     )
     .then((res) => res.data);
 }
