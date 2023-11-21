@@ -51,7 +51,7 @@ function NewFeed() {
   }
 
   function changePageInfinite() {
-    console.log("page changed");
+    console.log("page changed yay");
     setCurrentPage((currentPage) => currentPage + 1);
   }
   return (
