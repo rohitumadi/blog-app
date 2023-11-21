@@ -16,25 +16,28 @@ import ProfileInfo from "./pages/user-routes/UserInfo";
 import UserInfo from "./pages/user-routes/UserInfo";
 import Home from "./pages/Home";
 import PostPage from "./pages/PostPage";
+import UserProvider from "./context/UserProvider";
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/posts/:postId" element={<PostPage />} />
-          <Route path="/user" element={<Privateroute />}>
-            <Route path="dashboard" element={<UserDashboard />} />
-            <Route path="user-info" element={<UserInfo />} />
-          </Route>
-        </Routes>
-        <ToastContainer />
-      </BrowserRouter>
+      <UserProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/posts/:postId" element={<PostPage />} />
+            <Route path="/user" element={<Privateroute />}>
+              <Route path="dashboard" element={<UserDashboard />} />
+              <Route path="user-info" element={<UserInfo />} />
+            </Route>
+          </Routes>
+          <ToastContainer />
+        </BrowserRouter>
+      </UserProvider>
     </div>
   );
 }

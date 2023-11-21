@@ -18,7 +18,10 @@ public class FileServiceImpl implements FileService {
        String name= file.getOriginalFilename();
        String randomID= UUID.randomUUID().toString();
 
-       if(!name.substring(name.lastIndexOf(".")).equals(".png"))throw new InvalidFileNameException(name,"Invalid File");
+       if(!name.substring(name.lastIndexOf(".")).equalsIgnoreCase(".png")
+       && !name.substring(name.lastIndexOf(".")).equals(".jpeg")
+       && !name.substring(name.lastIndexOf(".")).equals(".jpg"))throw new InvalidFileNameException(name,"Invalid File");
+
        String fileName=randomID.concat(name.substring(name.lastIndexOf(".")));
        String filePath=path+ File.separator+fileName;
        File f=new File(path);

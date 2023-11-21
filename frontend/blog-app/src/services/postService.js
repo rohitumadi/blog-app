@@ -28,3 +28,13 @@ export function createComment(comment, postId) {
     .post(`/post/${postId}/comments`, { content: comment })
     .then((res) => res.data);
 }
+
+export function uploadPostImage(image, postId) {
+  let formData = new FormData();
+  formData.append("image", image); //key used here is from backend
+  return privateAxios
+    .post(`/post/image/upload/${postId}`, formData, {
+      "Content-Type": "multipart/form-data",
+    })
+    .then((res) => res.data);
+}

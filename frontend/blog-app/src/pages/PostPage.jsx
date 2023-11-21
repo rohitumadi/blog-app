@@ -68,9 +68,11 @@ function PostPage() {
             {post && (
               <Card body color="secondary" outline>
                 <img
-                  className="img-fluid"
+                  className="img-fluid shadow m-5"
                   alt=""
                   src={BASE_URL + "/post/image/" + post.imageName}
+                  // width="50%"
+                  // height="50%"
                 />
                 <CardBody>
                   <Badge color="primary">{post.category.categoryTitle}</Badge>
@@ -83,7 +85,6 @@ function PostPage() {
                     Posted by: <strong>{post.user.name}</strong> on{" "}
                     {new Date(post.dateCreated).toLocaleDateString()}
                   </CardText>
-                  <Button>Button</Button>
                 </CardBody>
               </Card>
             )}
