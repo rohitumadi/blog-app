@@ -12,7 +12,7 @@ public interface PostService  {
     PostResponse getAllPosts(Integer pageNumber  , Integer pageSize,String sortBy,String sortDir);
     void deletePost(Integer postId);
 
-    PostResponse getPostsByCategory(Integer pageNumber  , Integer pageSize,Integer categoryId);
+    PostResponse getPostsByCategory(Integer pageNumber  , Integer pageSize,Integer categoryId,String sortBy,String sortDir);
 
     PostResponse  getPostsByUser(Integer pageNumber  , Integer pageSize,Integer userId);
 

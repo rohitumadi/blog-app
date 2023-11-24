@@ -38,3 +38,13 @@ export function uploadPostImage(image, postId) {
     })
     .then((res) => res.data);
 }
+
+export function getPostsByCategory(categoryId, pageNumber = 0, pageSize = 5) {
+  return privateAxios
+    .get(
+      `/category/${categoryId}/posts?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=dateCreated&sortDir=desc`
+    )
+    .then((res) => {
+      return res.data;
+    });
+}

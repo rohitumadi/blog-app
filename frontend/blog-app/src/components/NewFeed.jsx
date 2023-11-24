@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllPosts } from "../services/postService";
 import { toast } from "react-toastify";
 import {
+  Badge,
   Col,
   Container,
   Pagination,
@@ -11,6 +12,7 @@ import {
 } from "reactstrap";
 import Post from "./Post";
 import InfiniteScroll from "react-infinite-scroll-component";
+import CountUp from "react-countup";
 
 function NewFeed() {
   const [posts, setPosts] = useState({
@@ -35,6 +37,7 @@ function NewFeed() {
     if (pageNumber < posts.pageNumber && posts.pageNumber === 0) return;
     try {
       const res = await getAllPosts(pageNumber, pageSize);
+      console.log(res);
       setPosts({
         content: [...posts.content, ...res.content],
         totalPages: res.totalPages,
@@ -43,15 +46,16 @@ function NewFeed() {
         lastPage: res.lastPage,
         pageNumber: res.pageNumber,
       });
-      console.log(res);
-      window.scrollTo(0, 0);
+
+      //   window.scrollTo(0, 0);
     } catch (err) {
       toast.error("Error fetching Posts");
     }
   }
 
   function changePageInfinite() {
-    console.log("page changed yay");
+    console.log("last page", posts.lastPage, posts.pageNumber);
+
     setCurrentPage((currentPage) => currentPage + 1);
   }
   return (
@@ -59,24 +63,31 @@ function NewFeed() {
       <Row>
         <Col
           md={{
-            size: 10,
-            offset: 1,
+            size: 12,
           }}
+          className="border-end"
         >
-          <h1>Blogs count {posts?.totalElements}</h1>
+          <h1>
+            Blogs
+            <Badge className="ms-2">
+              <CountUp start={0} end={posts?.totalElements} duration={3} />
+            </Badge>
+          </h1>
 
           <InfiniteScroll
-            dataLength={posts?.totalElements}
+            dataLength={posts?.pageSize * (posts?.pageNumber + 1)} //length of items that are currently displayed
             next={changePageInfinite}
             hasMore={!posts?.lastPage}
+            loader={<h4>Loading...</h4>}
+            // height={300}
             endMessage={
               <p style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all</b>
+                <b>Yay! You have seen it all 🎉</b>
               </p>
             }
           >
-            {posts?.content.map((post) => (
-              <Post post={post} key={post.postId} />
+            {posts?.content.map((post, index) => (
+              <Post post={post} key={index} />
             ))}
           </InfiniteScroll>
 

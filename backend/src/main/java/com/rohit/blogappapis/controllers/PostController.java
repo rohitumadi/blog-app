@@ -44,11 +44,14 @@ public class PostController {
 
     @GetMapping("/category/{categoryId}/posts")
     public  ResponseEntity<PostResponse> getPostsByCategory(@RequestParam(value = "pageNumber", defaultValue =AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
-                                                            @RequestParam(value = "pageSize", defaultValue =AppConstants.PAGE_SIZE,required = false) Integer pageSize,@PathVariable Integer categoryId)
+                                                            @RequestParam(value = "pageSize", defaultValue =AppConstants.PAGE_SIZE,required = false) Integer pageSize,
+                                                            @RequestParam(value = "sortBy", defaultValue =AppConstants.SORT_BY,required = false) String sortBy,
+                                                            @RequestParam(value = "sortDir", defaultValue =AppConstants.SORT_DIR,required = false) String sortDir,
+                                                            @PathVariable Integer categoryId)
     {
         PostResponse posts=this
                 .postService
-                .getPostsByCategory(pageNumber, pageSize,categoryId);
+                .getPostsByCategory(pageNumber, pageSize,categoryId,sortBy,sortDir);
         return new ResponseEntity<PostResponse>(posts,HttpStatus.OK);
 
     }
