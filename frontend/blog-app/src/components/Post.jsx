@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import { getCurrentUser, isLoggedIn } from "../auth";
 import { MdDeleteForever } from "react-icons/md";
+import userContext from "./../context/userContext";
 //this component is displayed in the new feed one by one
 function Post({
   post = {
@@ -20,6 +21,7 @@ function Post({
   },
   deletePost,
 }) {
+  const userContextData = useContext(userContext);
   const [user, setUser] = useState({});
   const [login, setLogin] = useState(false);
   const [modal, setModal] = useState(false);
@@ -51,7 +53,8 @@ function Post({
           >
             Read More
           </Link>
-          {isLoggedIn && user && user.id === post.user.id && (
+
+          {userContextData.user.login && user && user.id === post.user.id && (
             <>
               <Button
                 onClick={toggle}

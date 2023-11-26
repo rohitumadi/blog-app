@@ -12,47 +12,27 @@ import {
   Row,
 } from "reactstrap";
 import Base from "../components/Base";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { loginUser } from "../services/userService";
 import { doLogin } from "../auth";
 import { useNavigate } from "react-router-dom";
+import userContext from "../context/userContext";
 
 function Login() {
   const [loginDetail, setLoginDetail] = useState({
     username: "",
     password: "",
   });
+
+  const userContextData = useContext(userContext);
   const navigate = useNavigate();
-  function toastSuccess(message) {
-    toast.success(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  }
-  function toastError(message) {
-    toast.error(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  }
+
   function handleFormSubmit(e) {
     e.preventDefault();
-    console.log(loginDetail);
+
     if (loginDetail.username === "" || loginDetail.password === "") {
-      toastError("username or password blank");
+      toast.error("username or password blank");
       return;
     }
     loginUser(loginDetail)
@@ -60,14 +40,18 @@ function Login() {
         // save data to localStorage
         doLogin(data, () => {
           //redirect to user dashboard page
+          userContextData.setUser({
+            data: data.user,
+            login: true,
+          });
           navigate("/user/dashboard");
         });
-        toastSuccess("Login successful");
+        toast.success("Login successful");
       })
       .catch((err) => {
         if (err.response.status === 400 || err.response.status === 404)
-          toastError(err.response.data.message);
-        else toastError("Something went wrong please try again");
+          toast.error(err.response.data.message);
+        else toast.error("Something went wrong please try again");
       });
   }
 
