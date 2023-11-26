@@ -48,3 +48,13 @@ export function getPostsByCategory(categoryId, pageNumber = 0, pageSize = 5) {
       return res.data;
     });
 }
+
+export function getPostsByUser(userId, pageNumber = 0, pageSize = 5) {
+  return privateAxios
+    .get(`/user/${userId}/posts?pageSize=${pageSize}&pageNumber=${pageNumber}`)
+    .then((res) => res.data);
+}
+
+export function deletePostApi(postId) {
+  return privateAxios.delete(`/posts/${postId}`).then((res) => res.data);
+}

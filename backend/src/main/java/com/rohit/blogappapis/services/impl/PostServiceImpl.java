@@ -15,12 +15,16 @@ import com.rohit.blogappapis.repositories.UserRepository;
 import com.rohit.blogappapis.services.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +33,9 @@ import java.util.Set;
 public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
+
+    @Value("${project.image}")
+    private String path;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -152,8 +159,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(Integer postId) {
+        Post post=this.postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post","PostId",postId));
+        String imageName=post.getImageName();
+        String filePath=path+ File.separator+imageName;
+        Path path = Paths.get(filePath);
+        try {
+            // Delete file or directory
+            Files.delete(path);
+            System.out.println("File or directory deleted successfully");
+        } catch (NoSuchFileException ex) {
+            System.out.printf("No such file or directory: %s\n", path);
+        } catch (DirectoryNotEmptyException ex) {
+            System.out.printf("Directory %s is not empty\n", path);
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
         this.postRepository.deleteById(postId);
-
 
     }
 

@@ -59,19 +59,15 @@ function Login() {
       .then((data) => {
         // save data to localStorage
         doLogin(data, () => {
-          console.log("login detail is saved to localStorage");
           //redirect to user dashboard page
           navigate("/user/dashboard");
         });
         toastSuccess("Login successful");
-        console.log(data);
       })
       .catch((err) => {
         if (err.response.status === 400 || err.response.status === 404)
           toastError(err.response.data.message);
         else toastError("Something went wrong please try again");
-
-        console.log(err);
       });
   }
 

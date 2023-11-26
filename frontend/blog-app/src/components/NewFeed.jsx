@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllPosts } from "../services/postService";
+import { deletePostApi, getAllPosts } from "../services/postService";
 import { toast } from "react-toastify";
 import {
   Badge,
@@ -58,6 +58,18 @@ function NewFeed() {
 
     setCurrentPage((currentPage) => currentPage + 1);
   }
+  async function deletePost(post) {
+    try {
+      const res = await deletePostApi(post.postId);
+      toast.success("Post deleted successfully");
+      const newPostContent = posts.content.filter(
+        (p) => p.postId !== post.postId
+      );
+      setPosts({ ...posts, content: newPostContent });
+    } catch (err) {
+      toast.error("Error deleting post, Please try again");
+    }
+  }
   return (
     <div className="conatiner-fluid my-3 ">
       <Row>
@@ -87,7 +99,7 @@ function NewFeed() {
             }
           >
             {posts?.content.map((post, index) => (
-              <Post post={post} key={index} />
+              <Post post={post} key={index} deletePost={deletePost} />
             ))}
           </InfiniteScroll>
 

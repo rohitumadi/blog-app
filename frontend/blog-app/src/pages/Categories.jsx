@@ -11,7 +11,7 @@ import {
   Row,
 } from "reactstrap";
 import CategorySideMenu from "../components/CategorySideMenu";
-import { getPostsByCategory } from "../services/postService";
+import { deletePostApi, getPostsByCategory } from "../services/postService";
 import Post from "../components/Post";
 import { toast } from "react-toastify";
 import CountUp from "react-countup";
@@ -27,14 +27,7 @@ function Categories() {
     lastPage: false,
     pageNumber: 0,
   });
-  const [currentPage, setCurrentPage] = useState(0);
 
-  useEffect(
-    function () {
-      changePage(currentPage);
-    },
-    [currentPage]
-  );
   async function changePage(pageNumber = 0, pageSize = 5) {
     if (pageNumber > posts.pageNumber && posts.lastPage) return;
     if (pageNumber < posts.pageNumber && posts.pageNumber === 0) return;
@@ -65,6 +58,18 @@ function Categories() {
     },
     [categoryId]
   );
+  async function deletePost(post) {
+    try {
+      const res = await deletePostApi(post.postId);
+      toast.success("Post deleted successfully");
+      const newPostContent = posts.content.filter(
+        (p) => p.postId !== post.postId
+      );
+      setPosts({ ...posts, content: newPostContent });
+    } catch (err) {
+      toast.error("Error deleting post, Please try again");
+    }
+  }
 
   return (
     <Base>
@@ -83,7 +88,7 @@ function Categories() {
 
             {posts.totalElements !== 0 &&
               posts.content.map((post, index) => (
-                <Post post={post} key={index} />
+                <Post post={post} key={index} deletePost={deletePost} />
               ))}
 
             {posts.totalElements !== 0 && (

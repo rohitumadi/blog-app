@@ -69,7 +69,7 @@ function AddPost() {
         uploadPostImage(image, res.postId)
           .then((res) => {})
           .catch((err) => {
-            toast.error("Error uploading image");
+            toast.error("Image was not selected or some error occurred");
           });
 
         toast.success("Post created successfully");

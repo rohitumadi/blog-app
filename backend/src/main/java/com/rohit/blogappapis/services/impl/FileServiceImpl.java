@@ -38,10 +38,12 @@ public class FileServiceImpl implements FileService {
     public InputStream getResource(String path, String filename) throws FileNotFoundException {
         String fullPath= path+ File.separator+filename;
         //File.separator is / only in some OS \ is used in some / is used as separator
-        System.out.println(File.separator);
+
         InputStream is=new FileInputStream(fullPath);
         //db logic to return inputStream
         return is;
 
     }
+
+
 }
